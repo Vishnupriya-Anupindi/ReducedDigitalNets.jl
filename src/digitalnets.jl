@@ -5,6 +5,9 @@ struct DigitalNetGenerator
     C::Vector{Matrix{Int64}}
 end
 
+""" 
+This function computes the dot product of vector v with ``(\\frac{1}{b},\\dots,\\frac{1}{b^m})``
+"""
 function norm_coord(v,b)
     v_1 = 0.0
     for i in eachindex(v)
@@ -13,6 +16,9 @@ function norm_coord(v,b)
     return v_1
 end
 
+""" 
+This function generates the points of the digital net using the generating matrices.
+"""
 function genpoints(P::DigitalNetGenerator)
     (;b,m,s,C) = P
     Cn = zeros(Int64, m)
