@@ -5,6 +5,14 @@ struct DigitalNetGenerator
     C::Vector{Matrix{Int64}}
 end
 
+function norm_coord(v,b)
+    v_1 = 0.0
+    for i in eachindex(v)
+        v_1 += v[i] / b^i
+    end
+    return v_1
+end
+
 function genpoints(P::DigitalNetGenerator)
     (;b,m,s,C) = P
     Cn = zeros(Int64, m)
@@ -21,3 +29,12 @@ function genpoints(P::DigitalNetGenerator)
     end
     return pts
 end
+
+
+function redmatrices(P::DigitalNetGenerator,rows,cols)
+    C = [P.C[i][1:end-rows[i],1:end-cols[i]] for i in eachindex(P.C)]
+    return DigitalNetGenerator(P.b,P.m,P.s,C)
+end
+
+colredmatrices(P,cols) = redmatrices(P, zeros(Int,P.s), cols)
+rowredmatrices(P,rows) = redmatrices(P, rows, zeros(Int,P.s))
