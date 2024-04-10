@@ -34,3 +34,15 @@ end
     X = stack(ptsred)'
     @test prod_alg == X*A
 end
+
+
+@testset "row reduced multiplication" begin 
+    P = DigitalNetGenerator(2,2,2,[[1 0; 0 1], [0 1; 1 0]])
+    A = [1 2 3; 2 5 1]
+    w = [0,1]
+    PT = rowredmatrices(P,w)
+    ptsred = genpoints(PT)
+    X = stack(ptsred)'
+    prod_alg = rowredmul(P, A, w, ptsred)
+    @test prod_alg == X*A
+end
