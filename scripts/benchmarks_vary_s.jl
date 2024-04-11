@@ -81,16 +81,19 @@ df_reg = DataFrame(reg_row_red = regres_comp(df.s,df.row_red), reg_col_red = reg
 
 CSV.write("Output/regression_$(fn_postfix).csv", df_reg)
 
+colors = distinguishable_colors(4, [RGB(1,1,1), RGB(0,0,0)], dropseed=true)
+
+
 begin
     fig = Figure()
     ax = Axis(fig[1,1], title = "", xlabel = "log s", ylabel = "Runtime (log seconds)",xscale = log10, yscale = log10, xminorticksvisible = true, xminorgridvisible = true,
     xminorticks = IntervalsBetween(5),yminorticksvisible = true, yminorgridvisible = true,
     yminorticks = IntervalsBetween(5))
     
-    plot_lines!(df.s,df.col_red,"Column reduced mm product",:circle, :blue)
-    #plot_lines!(df.s,df.std_mat,"Standard mm product",:rect, :orange)
-    plot_lines!(df.s,df.row_red,"Row reduced mm product", :xcross, :darkred)
-    plot_lines!(df.s,df.row_col_red,"Row and column reduced mm product",:rect, :orange)
+    plot_lines!(df.s,df.col_red,"Column reduced mm product",:circle, colors[1])
+    plot_lines!(df.s,df.std_mat,"Standard mm product",:rect, colors[2])
+    plot_lines!(df.s,df.row_red,"Row reduced mm product", :xcross, colors[3])
+    plot_lines!(df.s,df.row_col_red,"Row and column reduced mm product",:rtriangle, colors[4])
 
     d_1,d_2 =  regres_theory(df.col_red, df.theo_col)
     lines!(df.s, d_2.*df.theo_col,linestyle = :dash, label="Theoretical estimate column reduced",linewidth = 1.5, color = :black)
@@ -110,10 +113,10 @@ begin
     yminorticks = IntervalsBetween(5))
 
 
-    plot_lines!(df.s,df.col_red,"Column reduced mm product",:circle, :blue)
-    #plot_lines!(df.s,df.std_mat,"Standard mm product", :rect, :orange)
-    plot_lines!(df.s,df.row_red,"Row reduced mm product", :xcross, :darkred)
-    plot_lines!(df.s,df.row_col_red,"Row and column reduced mm product",:rect, :orange)
+    plot_lines!(df.s,df.col_red,"Column reduced mm product",:circle, colors[1])
+    plot_lines!(df.s,df.std_mat,"Standard mm product",:rect, colors[2])
+    plot_lines!(df.s,df.row_red,"Row reduced mm product", :xcross, colors[3])
+    plot_lines!(df.s,df.row_col_red,"Row and column reduced mm product",:rtriangle, colors[4])
     
     d_1,d_2 =  regres_theory(df.col_red, df.theo_col)
     lines!(df.s, d_2.*df.theo_col,linestyle = :dash, label="Theoretical estimate column reduced",linewidth = 1.5, color = :black)
