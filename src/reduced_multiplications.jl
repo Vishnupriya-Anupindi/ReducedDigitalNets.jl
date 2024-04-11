@@ -123,7 +123,7 @@ end
 
 
 
-function stdmul(P::DigitalNetGenerator, A)
-    X = stack(genpoints(P))'
+function stdmul(P::DigitalNetGenerator, A, pts=genpoints(P))
+    X = stack(pts)'
     return X*A
 end

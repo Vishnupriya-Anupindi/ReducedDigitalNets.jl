@@ -21,7 +21,7 @@ BenchmarkTools.DEFAULT_PARAMETERS.seconds = 0.1
 τ = 20
 M = length(1:step_size:s_range) 
 
-df = DataFrame(s = collect(1:step_size:s_range), gen_pts=zeros(M), row_red = zeros(M), col_red = zeros(M), row_col_red = zeros(M), std_mat = zeros(M), theo_col = zeros(M), theo_row = zeros(M))
+df = DataFrame(s = collect(1:step_size:s_range), gen_pts=zeros(M), row_red = zeros(M), col_red = zeros(M), row_col_red = zeros(M), std_mat = zeros(M), std_mat_pts = zeros(M), theo_col = zeros(M), theo_row = zeros(M))
 
 begin 
 
@@ -56,9 +56,12 @@ begin
 
         df.row_col_red[k] = @belapsed redmul($P, $A_s, $w_s)
 
+        df.std_mat[k] = @belapsed stdmul($Pcr, $A_s)
+
         pts = genpoints(Prr)
         df.gen_pts[k] = @belapsed genpoints($Prr)
         df.row_red[k] = @belapsed rowredmul($P, $A_s, $w_s, $pts)
+        df.std_mat_pts[k] = @belapsed stdmul($Prr, $A_s, $pts)
         
         df.theo_col[k] = runtime_theory_col(τ, b, m, s, w_s)
         df.theo_row[k] = runtime_theory_row(τ, b, m, s, w_s)
