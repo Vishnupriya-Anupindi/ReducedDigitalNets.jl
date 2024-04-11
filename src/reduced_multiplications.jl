@@ -120,3 +120,10 @@ function redmul(P::DigitalNetGenerator, A, w)
     end
     return P_j
 end
+
+
+
+function stdmul(P::DigitalNetGenerator, A)
+    X = stack(genpoints(P))'
+    return X*A
+end

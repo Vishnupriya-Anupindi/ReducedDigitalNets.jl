@@ -1,4 +1,5 @@
 using ReducedDigitalNets
+using ReducedDigitalNets: stdmul
 using Test
 
 #@testset "ReducedDigitalNets.jl" begin
@@ -30,9 +31,7 @@ end
     w = [0,1]
     prod_alg = colredmul(P, A, w)
     PT = colredmatrices(P,w)
-    ptsred = genpoints(PT)
-    X = stack(ptsred)'
-    @test prod_alg == X*A
+    @test prod_alg == stdmul(PT,A)
 end
 
 
@@ -42,9 +41,8 @@ end
     w = [0,1]
     PT = rowredmatrices(P,w)
     ptsred = genpoints(PT)
-    X = stack(ptsred)'
     prod_alg = rowredmul(P, A, w, ptsred)
-    @test prod_alg == X*A
+    @test prod_alg == stdmul(PT,A)
 end
 
 @testset "row+column reduced computation" begin 
@@ -53,7 +51,6 @@ end
     w = [0,1]
     prod_alg = redmul(P, A, w)
     PT = redmatrices(P,w,w)
-    ptsred = genpoints(PT)
-    X = stack(ptsred)'
-    @test prod_alg == X*A
+    @test prod_alg == stdmul(PT,A)
 end
+
