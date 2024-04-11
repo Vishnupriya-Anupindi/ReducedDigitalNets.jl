@@ -38,7 +38,7 @@ end
 
 
 function redmatrices(P::DigitalNetGenerator,rows,cols)
-    C = [P.C[i][1:end-rows[i],1:end-cols[i]] for i in eachindex(P.C)]
+    C = [P.C[i][1:P.m-rows[i],1:P.m-cols[i]] for i in eachindex(P.C)]
     return DigitalNetGenerator(P.b,P.m,P.s,C)
 end
 
