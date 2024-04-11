@@ -1,14 +1,16 @@
 using ReducedDigitalNets
+using ReducedDigitalNets: stdmul
 using BenchmarkTools
 using Statistics
 using CairoMakie
 using GLM, StatsBase, DataFrames, CSV
+using Colors
 
 include("utils.jl")
 
 mkpath("Output")
 
-case = 12
+case = 11
 b = 2
 s_range = 1600
 step_size = 200
@@ -74,6 +76,10 @@ end
 
 
 CSV.write("Output/runtime_$(fn_postfix).csv", df)
+
+df_reg = DataFrame(reg_row_red = regres_comp(df.s,df.row_red), reg_col_red = regres_comp(df.s,df.col_red), reg_red = regres_comp(df.s,df.row_col_red), reg_std_mul = regres_comp(df.s, df.std_mat) )
+
+CSV.write("Output/regression_$(fn_postfix).csv", df_reg)
 
 begin
     fig = Figure()

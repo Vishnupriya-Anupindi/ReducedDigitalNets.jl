@@ -2,7 +2,7 @@
 
 julia_version = "1.10.2"
 manifest_format = "2.0"
-project_hash = "40b194a8854bc5e80bdaeb89e9aae6fa218036d6"
+project_hash = "7bd2b0c53c2449dba6409120d29483c8dc5ff25f"
 
 [[deps.AbstractFFTs]]
 deps = ["LinearAlgebra"]
@@ -1202,7 +1202,7 @@ version = "1.3.4"
 
 [[deps.ReducedDigitalNets]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "f33bc6d3ebdaf2fcb78360f9d80dd14241074eec"
+git-tree-sha1 = "6f6aece54beb645b92e73a97494166da3ddbb973"
 repo-rev = "main"
 repo-url = ".."
 uuid = "d2642c5b-3402-4c09-8c93-b26220e08500"

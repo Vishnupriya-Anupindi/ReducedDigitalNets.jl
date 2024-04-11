@@ -19,7 +19,7 @@ end
 function regres_comp(s_val,T_val)
     df = DataFrame(x = log.(s_val),y = log.(T_val))
     ols = lm(@formula(y ~ x), df)
-    return exp(coef(ols)[1]), coef(ols)[2]
+    return [exp(coef(ols)[1]), coef(ols)[2]]
 end
 
 function regres_theory(T_val, T_theory)
