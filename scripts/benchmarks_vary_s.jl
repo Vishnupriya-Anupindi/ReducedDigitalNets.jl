@@ -77,11 +77,14 @@ end
 
 CSV.write("Output/runtime_$(fn_postfix).csv", df)
 
+df = CSV.read("Output/runtime_$(fn_postfix).csv", DataFrame)
+
 df_reg = DataFrame(reg_row_red = regres_comp(df.s,df.row_red), reg_col_red = regres_comp(df.s,df.col_red), reg_red = regres_comp(df.s,df.row_col_red), reg_std_mul = regres_comp(df.s, df.std_mat) )
 
 CSV.write("Output/regression_$(fn_postfix).csv", df_reg)
 
-colors = distinguishable_colors(4, [RGB(1,1,1), RGB(0,0,0)], dropseed=true)
+colors = distinguishable_colors(5, [RGB(1,1,1), RGB(0,0,0)], dropseed=true)[2:end]
+
 
 
 begin
