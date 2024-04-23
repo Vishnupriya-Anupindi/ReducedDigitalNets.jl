@@ -10,20 +10,28 @@ include("utils.jl")
 
 mkpath("Output")
 
-case = 11
+case = 13
 b = 2
 s_range = 1600
+n_steps = 9
 step_size = 200
 m = 12
-fn_postfix = "case$(case)_m$(m)_s$(s_range)_b$(b)"
+fn_postfix = "case$(case)_m$(m)_s$(s_range)_b$(b)_exps"
 
-BenchmarkTools.DEFAULT_PARAMETERS.seconds = 0.1
+BenchmarkTools.DEFAULT_PARAMETERS.seconds = 1
 #BenchmarkTools.DEFAULT_PARAMETERS.samples = 2
 
 τ = 20
-M = length(1:step_size:s_range) 
 
-df = DataFrame(s = collect(1:step_size:s_range), gen_pts=zeros(M), row_red = zeros(M), col_red = zeros(M), row_col_red = zeros(M), std_mat = zeros(M), std_mat_pts = zeros(M), theo_col = zeros(M), theo_row = zeros(M))
+#For linear s range
+#s = collect(1:step_size:s_range)
+#M = length(1:step_size:s_range) 
+
+#For exponential s range
+s_exp = floor.(Int, 10 .^LinRange(0,4,n_steps))
+M = length(s_exp)
+
+df = DataFrame(s = s_exp, gen_pts=zeros(M), row_red = zeros(M), col_red = zeros(M), row_col_red = zeros(M), std_mat = zeros(M), std_mat_pts = zeros(M), theo_col = zeros(M), theo_row = zeros(M))
 
 begin 
 
@@ -89,45 +97,46 @@ colors = distinguishable_colors(5, [RGB(1,1,1), RGB(0,0,0)], dropseed=true)[2:en
 
 begin
     fig = Figure()
-    ax = Axis(fig[1,1], title = "", xlabel = "log s", ylabel = "Runtime (log seconds)",xscale = log10, yscale = log10, xminorticksvisible = true, xminorgridvisible = true,
+    ax = Axis(fig[1,1], title = "", xlabel = "s (log scale)", ylabel = "Runtime in seconds (log scale)",xscale = log10, yscale = log10, xminorticksvisible = true, xminorgridvisible = true,
     xminorticks = IntervalsBetween(5),yminorticksvisible = true, yminorgridvisible = true,
     yminorticks = IntervalsBetween(5))
     
-    plot_lines!(df.s,df.col_red,"Column reduced mm product",:circle, colors[1])
-    plot_lines!(df.s,df.std_mat,"Standard mm product",:rect, colors[2])
-    plot_lines!(df.s,df.row_red,"Row reduced mm product", :xcross, colors[3])
-    plot_lines!(df.s,df.row_col_red,"Row and column reduced mm product",:rtriangle, colors[4])
+    plot_lines!(df.s,df.col_red,"column reduced",:circle, colors[1])
+    plot_lines!(df.s,df.std_mat,"standard",:rect, colors[2])
+    plot_lines!(df.s,df.row_red,"row reduced", :xcross, colors[3])
+    plot_lines!(df.s,df.row_col_red,"row and column reduced",:rtriangle, colors[4])
 
     d_1,d_2 =  regres_theory(df.col_red, df.theo_col)
-    lines!(df.s, d_2.*df.theo_col,linestyle = :dash, label="Theoretical estimate column reduced",linewidth = 1.5, color = :black)
+    lines!(df.s, d_2.*df.theo_col,linestyle = :dash, label="theoretical estimate \n column reduced",linewidth = 1.5, color = :black)
 
-    d_3,d_4 =  regres_theory(df.row_red, df.theo_row)
-    lines!(df.s, d_4.*df.theo_row,linestyle = :dash, label="Theoretical estimate row reduced",linewidth = 1.5, color = :gray)
+    # d_3,d_4 =  regres_theory(df.row_red, df.theo_row)
+    # lines!(df.s, d_4.*df.theo_row,linestyle = :dash, label="Theoretical estimate row reduced",linewidth = 1.5, color = :gray)
 
-    axislegend(ax, merge = true, position = :lt)
+    axislegend("Matrix multiplication", merge = true, position = :lt)
     save("Output/logplot_$(fn_postfix).png", fig)
+    save("Output/logplot_$(fn_postfix).svg", fig)
     fig
 end
 
 
-begin
-    fig = Figure()
-    ax = Axis(fig[1,1], title = "", xlabel = "s", ylabel = "Runtime (log seconds)" , yscale = log10, yminorticksvisible = true, yminorgridvisible = true,
-    yminorticks = IntervalsBetween(5))
+# begin
+#     fig = Figure()
+#     ax = Axis(fig[1,1], title = "", xlabel = "s", ylabel = "Runtime (log seconds)" , yscale = log10, yminorticksvisible = true, yminorgridvisible = true,
+#     yminorticks = IntervalsBetween(5))
 
 
-    plot_lines!(df.s,df.col_red,"Column reduced mm product",:circle, colors[1])
-    plot_lines!(df.s,df.std_mat,"Standard mm product",:rect, colors[2])
-    plot_lines!(df.s,df.row_red,"Row reduced mm product", :xcross, colors[3])
-    plot_lines!(df.s,df.row_col_red,"Row and column reduced mm product",:rtriangle, colors[4])
+#     plot_lines!(df.s,df.col_red,"Column reduced",:circle, colors[1])
+#     plot_lines!(df.s,df.std_mat,"Standard",:rect, colors[2])
+#     plot_lines!(df.s,df.row_red,"Row reduced", :xcross, colors[3])
+#     plot_lines!(df.s,df.row_col_red,"Row and column reduced",:rtriangle, colors[4])
     
-    d_1,d_2 =  regres_theory(df.col_red, df.theo_col)
-    lines!(df.s, d_2.*df.theo_col,linestyle = :dash, label="Theoretical estimate column reduced",linewidth = 1.5, color = :black)
+#     d_1,d_2 =  regres_theory(df.col_red, df.theo_col)
+#     lines!(df.s, d_2.*df.theo_col,linestyle = :dash, label="Theoretical estimate \n column reduced",linewidth = 1.5, color = :black)
 
-    d_3,d_4 =  regres_theory(df.row_red, df.theo_row)
-    lines!(df.s, d_4.*df.theo_row,linestyle = :dash, label="Theoretical estimate row reduced",linewidth = 1.5, color = :gray)
+#     # d_3,d_4 =  regres_theory(df.row_red, df.theo_row)
+#     # lines!(df.s, d_4.*df.theo_row,linestyle = :dash, label="Theoretical estimate row reduced",linewidth = 1.5, color = :gray)
     
-    axislegend(ax, merge = true, position = :rb)
-    save("Output/semilog_plot_$(fn_postfix).png", fig)
-    fig
-end
+#     axislegend("matrix multiplication", merge = true, position = :rc)
+#     save("Output/semilog_plot_$(fn_postfix).png", fig)
+#     fig
+# end
