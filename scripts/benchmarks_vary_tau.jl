@@ -14,7 +14,7 @@ case = 32
 b = 2
 tau_range = 1000
 step_size = 200
-m = 8
+m = 12
 s = 2000
 fn_postfix = "case$(case)_m$(m)_s$(s)_tau$(tau_range)"
 
@@ -48,7 +48,13 @@ begin
         #w_s = @. min(floor(Int64,log2(1:s)),m)
 
         
-        w_s = @. min(floor(Int64,log2(1:s)),m)
+        if case == 31
+            w_s = @. min(floor(Int64,log2(1:s)),m)
+        elseif case == 32
+            w_s = @. min(floor(Int64,(log2(1:s))^(1/2)),m)
+        elseif case == 33
+            w_s = @. min(floor(Int64,(log2(1:s))^(1/4)),m)
+        end
         
 
         Pcr = colredmatrices(P,w_s)
