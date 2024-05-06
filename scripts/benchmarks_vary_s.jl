@@ -125,6 +125,8 @@ begin
     fig
 end
 
+#Use the following command in terminal in the output folder to generate eps files
+#inkscape *.svg --export-type=eps --without-gui
 
 # begin
 #     fig = Figure()
