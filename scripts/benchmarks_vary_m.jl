@@ -15,7 +15,7 @@ b = 2
 s = 800
 step_size = 2
 m_range = 20
-fn_postfix = "case$(case)_m$(m_range)_s$(s)_b$(b)"
+fn_postfix = "v2_case$(case)_m$(m_range)_s$(s)_b$(b)"
 
 BenchmarkTools.DEFAULT_PARAMETERS.seconds = 0.1
 #BenchmarkTools.DEFAULT_PARAMETERS.samples = 2
@@ -61,14 +61,14 @@ begin
 
         df.col_red[k] = @belapsed colredmul($P, $A_s, $w_s)
 
-        df.row_col_red[k] = @belapsed redmul($P, $A_s, $w_s)
+        #df.row_col_red[k] = @belapsed redmul($P, $A_s, $w_s)
 
         df.std_mat[k] = @belapsed stdmul($Pcr, $A_s)
 
         pts = genpoints(Prr)
         df.gen_pts[k] = @belapsed genpoints($Prr)
         df.row_red[k] = @belapsed rowredmul($P, $A_s, $w_s, $pts)
-        df.std_mat_pts[k] = @belapsed stdmul($Prr, $A_s, $pts)
+        #df.std_mat_pts[k] = @belapsed stdmul($Prr, $A_s, $pts)
         
         df.theo_col[k] = runtime_theory_col(τ, b, m, s, w_s)
         df.theo_row[k] = runtime_theory_row(τ, b, m, s, w_s)
@@ -120,12 +120,12 @@ begin
     fig = Figure()
     ax = Axis(fig[1,1], title = "", xlabel = "m", ylabel = "Runtime in seconds (log scale)" , yscale = log10, yminorticksvisible = true, yminorgridvisible = true,
     yminorticks = IntervalsBetween(5))
-    ylims!(ax,10^(-4),10^(1))
+    #ylims!(ax,10^(-4),10^(1))
 
     plot_lines!(df.m,df.col_red,"column reduced",:circle, colors[1])
-    plot_lines!(df.m,df.std_mat,"standard",:rect, colors[2])
+    plot_lines!(df.m,df.std_mat,"standard",:rect, colors[4])
     plot_lines!(df.m,df.row_red,"row reduced", :xcross, colors[3])
-    plot_lines!(df.m,df.row_col_red,"row and column reduced",:rtriangle, colors[4])
+    #plot_lines!(df.m,df.row_col_red,"row and column reduced",:rtriangle, colors[4])
     
     # d_1,d_2 =  regres_theory(df.col_red, df.theo_col)
     # lines!(df.m, d_2.*df.theo_col,linestyle = :dash, label="Theoretical estimate \n column reduced",linewidth = 1.5, color = :black)
