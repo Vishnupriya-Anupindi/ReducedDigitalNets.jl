@@ -135,5 +135,6 @@ begin
     
     axislegend("Matrix multiplication", merge = true, position = :lt)
     save("Output/semilog_plot_$(fn_postfix).png", fig)
+    save("Output/semilog_plot_$(fn_postfix).svg", fig)
     fig
 end
