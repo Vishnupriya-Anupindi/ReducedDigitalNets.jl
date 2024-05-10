@@ -117,7 +117,7 @@ colors = distinguishable_colors(5, [RGB(1,1,1), RGB(0,0,0)], dropseed=true)[2:en
 
 
 begin
-    fig = Figure()
+    fig = Figure(size = (500,350))
     ax = Axis(fig[1,1], title = "", xlabel = "m", ylabel = "Runtime in seconds (log scale)" , yscale = log10, yminorticksvisible = true, yminorgridvisible = true,
     yminorticks = IntervalsBetween(5))
     #ylims!(ax,10^(-4),10^(1))
