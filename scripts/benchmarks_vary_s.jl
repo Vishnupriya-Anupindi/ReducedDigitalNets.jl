@@ -10,7 +10,7 @@ include("utils.jl")
 
 mkpath("Output")
 
-case = 13
+case = 12
 b = 2
 s_range = 1600
 n_steps = 9
@@ -97,7 +97,7 @@ colors = distinguishable_colors(5, [RGB(1,1,1), RGB(0,0,0)], dropseed=true)[2:en
 
 
 begin
-    fig = Figure()
+    fig = Figure(size = (500,350))
     ax = Axis(fig[1,1], title = "", xlabel = "s (log scale)", ylabel = "Runtime in seconds (log scale)",xscale = log10, yscale = log10, xminorticksvisible = true, xminorgridvisible = true,
     xminorticks = IntervalsBetween(5),yminorticksvisible = true, yminorgridvisible = true,
     yminorticks = IntervalsBetween(5))
