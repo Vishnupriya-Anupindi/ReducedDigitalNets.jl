@@ -79,10 +79,22 @@ using CairoMakie
 begin 
     fig = Figure()
 
-    ax = Axis(fig[1,1], yscale = log10)
+    ax = Axis(fig[1,1], yscale = log10, xlabel = "m", ylabel = "Mean error")
 
     for (i_c, c) in enumerate([0, 0.5, 1])
-        lines!(ax, m_test, mean_error[:, i_c], linewidth = 2, label = "c = $(c)")
+        if i_c == 1
+            lines!(ax, m_test, mean_error[:, i_c], linewidth = 2, label = "c = $(c)")
+            scatter!(ax, m_test, mean_error[:, i_c], label = "c = $(c)")
+        elseif i_c == 2
+            lines!(ax, m_test, mean_error[:, i_c], linewidth = 2, label = "Reduced c = $(c)")
+            scatter!(ax, m_test, mean_error[:, i_c], label = "Reduced c = $(c)", marker = :rect)
+        else
+            lines!(ax, m_test, mean_error[:, i_c], linewidth = 2, label = "Reduced c = $(c)")
+            scatter!(ax, m_test, mean_error[:, i_c], label = "Reduced c = $(c)", marker = :utriangle)
+        end
+
+
+        #lines!(ax, m_test, mean_error[:, i_c], linewidth = 2, label = "c = $(c)")
         
         # band!(ax, m_test, 
         #         mean_error[:, i_c] - error_std[:, i_c] ./ 2 , 
@@ -90,7 +102,7 @@ begin
         #         label = "c = $(c)")
     end
 
-    axislegend(ax)
+    axislegend(ax, merge = true)
 
     save("Output/pricing_basket_option.png", fig)
     save("Output/pricing_basket_option.svg", fig)
