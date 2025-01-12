@@ -1,12 +1,31 @@
+#=
+    We aim to approximate 
+
+        𝔼[Sⱼ(T)] = 1/bᵐ ∑ₖ Sⱼ(0) exp(-σ/2T + (Lxₖ)ⱼ√T)
+
+    Sⱼ(0) = 100 
+    j, s = 10 
+    T = 1 
+    K = 110 
+    σ = 0.4 
+    ρ = 0.2     
+
+    R = 5 
+    m = 25 
+
+    wⱼ = min(⌊log₂(jᶜ)⌋, m)
+    c ∈ {1, 0.5, 0}
+=#
+
 using ReducedDigitalNets, LinearAlgebra, Statistics
 
 # Parameters
 
 b = 2
-j = 10
 s = 10 
 T = 1 
-K = 110 
+K = 110
+S_init = 100
 sigma = 0.4 
 rho = 0.2     
 
@@ -14,7 +33,7 @@ R_ref = 5
 R = 10
 
 m_ref = 25 
-m_test = 10:23
+m_test = 10:21
 
 
 # Compute L, such that LL^T = Σ
@@ -31,8 +50,7 @@ function expected_value(XA_prod, sigma, T)
 
     N = size(XA_prod, 1)
     s = size(XA_prod, 2)
-
-    return [1/N* sum(-sigma/(2*T) + XA_prod[k,j] * sqrt(T) for k in 1:N) for j in 1:s]
+    return [1/N* sum(S_init* exp(-sigma/(2*T) + XA_prod[k,j] * sqrt(T)) for k in 1:N) for j in 1:s]
 end
 
 
@@ -104,7 +122,7 @@ begin
 
     axislegend(ax, merge = true)
 
-    save("Output/pricing_basket_option.png", fig)
-    save("Output/pricing_basket_option.svg", fig)
+    save("Output/pricing_basket_option_1_Rref5.png", fig)
+    save("Output/pricing_basket_option_1_Rref5.svg", fig)
     fig
 end
