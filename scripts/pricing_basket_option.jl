@@ -79,7 +79,7 @@ using CairoMakie
 begin 
     fig = Figure()
 
-    ax = Axis(fig[1,1], yscale = log10, xlabel = "m", ylabel = "Mean error")
+    ax = Axis(fig[1,1], yscale = log10, xlabel = "m", ylabel = "Mean error", yminorticksvisible = true, yminorgridvisible = true)
 
     for (i_c, c) in enumerate([0, 0.5, 1])
         if i_c == 1
