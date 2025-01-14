@@ -6,7 +6,7 @@ function repeat!(A, rows, nrep)
 end
 
 
-function colredmul(P::DigitalNetGenerator, A, w)
+function colredmul(P::DigitalNetGenerator, A, w, quantile = x -> x)
     (;b,m,s,C) = colredmatrices(P,w)
 
     inv_base= [ 1 / b^(i) for i in 1:m]
@@ -40,7 +40,7 @@ function colredmul(P::DigitalNetGenerator, A, w)
             digits!(base_n, i-1, base=b)
             mul!(Cn,C_j,base_n)
             @. Cn = Cn % b  
-            X_ij = dot(Cn, inv_base)
+            X_ij = quantile(dot(Cn, inv_base))
             for k in 1:τ
                 P_j[i,k] += X_ij * A_j[k]
             end
@@ -56,7 +56,7 @@ function colredmul(P::DigitalNetGenerator, A, w)
 end
 
 
-function rowredmul(P::DigitalNetGenerator, A, w, pts)
+function rowredmul(P::DigitalNetGenerator, A, w, pts, quantile = x -> x)
     (;b,m,s,C) = rowredmatrices(P,w)
 
     τ = size(A,2)
@@ -68,7 +68,7 @@ function rowredmul(P::DigitalNetGenerator, A, w, pts)
     @inbounds for j in st:-1:1
         #Computing row vectors
         for k in 0:b^(m-w[j])-1
-           @views @. c[k+1] = k/(b^(m-w[j]))*A[j:j,:] # Julia has a problem with index
+           @views @. c[k+1] = quantile(k/(b^(m-w[j])))*A[j:j,:] # Julia has a problem with index
         end
         #Compute P_j
         for i in 1:b^m
@@ -79,7 +79,7 @@ function rowredmul(P::DigitalNetGenerator, A, w, pts)
     return P_j
 end
 
-function redmul(P::DigitalNetGenerator, A, w)
+function redmul(P::DigitalNetGenerator, A, w, quantile = x -> x)
     (;b,m,s,C) = redmatrices(P,w,w)
 
     inv_base= [ 1 / b^(i) for i in 1:m]
@@ -111,7 +111,7 @@ function redmul(P::DigitalNetGenerator, A, w)
             digits!(base_n, i-1, base=b)
             mul!(Cn,C_j,base_n)
             @. Cn = Cn % b  
-            X_ij = dot(Cn, @views inv_base[1:m-w[j]])
+            X_ij = quantile(dot(Cn, @views inv_base[1:m-w[j]]))
             for k in 1:τ
                 P_j[i,k] += X_ij * A_j[k]
             end
