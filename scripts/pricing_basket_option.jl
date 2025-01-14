@@ -126,11 +126,11 @@ end
 
 ES_T_ref = fill(100.0, s)
 
- R_ref = 1
- X = randn(R_ref * b^m_ref, s)
- XA_prod_ref = X * A
- ES_T_ref = expected_value(XA_prod_ref, sigma, T, S_init)
- HS_ref = pay_off(ES_T_ref, K)
+# R_ref = 1
+# X = randn(R_ref * b^m_ref, s)
+# XA_prod_ref = X * A
+# ES_T_ref = expected_value(XA_prod_ref, sigma, T, S_init)
+# HS_ref = pay_off(ES_T_ref, K)
 
 
 # compute for different values of c 
@@ -143,9 +143,22 @@ ES = Array{Vector}(undef, length(m_test), 5, R)
 # 2-dim: c-values: 0 (col/row), 0.5 (col), 1.0 (col), 0.5 (row), 1.0 (row)
 # 3-dim: R-values 
 
+#Testing
+# m=10
+# c=0.5
+# C = load_seq_mat("sobol_Cs.txt",b, m, s)
+# P = DigitalNetGenerator(b,m,s,C)            
+# w_s = [min(floor(Int,log2(j^c)), m) for j in 1:s]
+# XA_prod_colred = colredmul(P, A, w_s, quantile = x -> x)
+# Prr = rowredmatrices(P,w_s)
+# pts = genpoints(Prr)
+# XA_prod_rowred = rowredmul(P, A, w_s, pts, randn_quantile)
+
+
 for (i_m, m) in enumerate(m_test) 
     for (i_c, c) in enumerate([0,0.5,1.0])
-        Threads.@threads for i_r in 1:R
+        #Threads.@threads 
+        for i_r in 1:R
 
             println("m = $m, c_col = $c, rep = $i_r") 
 
