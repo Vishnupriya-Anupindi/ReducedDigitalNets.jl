@@ -1262,9 +1262,7 @@ version = "1.3.4"
 
 [[deps.ReducedDigitalNets]]
 deps = ["LinearAlgebra"]
-git-tree-sha1 = "6f6aece54beb645b92e73a97494166da3ddbb973"
-repo-rev = "main"
-repo-url = ".."
+path = ".."
 uuid = "d2642c5b-3402-4c09-8c93-b26220e08500"
 version = "0.1.0"
 

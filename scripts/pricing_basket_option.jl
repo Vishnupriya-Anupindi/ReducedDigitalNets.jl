@@ -42,7 +42,7 @@ else
 end
 
 m_ref = 25
-m_test = 10:20
+m_test = 10:23
 
 ###########
 # Helper function to convert uniform to normal distribution:
@@ -126,8 +126,8 @@ end
 
 ES_T_ref = fill(100.0, s)
 
-# R_ref = 1
-# X = randn(R_ref * b^m_ref, s)
+#R_ref = 1
+#X = randn(R_ref * b^m_ref, s)
 # XA_prod_ref = X * A
 # ES_T_ref = expected_value(XA_prod_ref, sigma, T, S_init)
 # HS_ref = pay_off(ES_T_ref, K)
@@ -149,7 +149,7 @@ ES = Array{Vector}(undef, length(m_test), 5, R)
 # C = load_seq_mat("sobol_Cs.txt",b, m, s)
 # P = DigitalNetGenerator(b,m,s,C)            
 # w_s = [min(floor(Int,log2(j^c)), m) for j in 1:s]
-# XA_prod_colred = colredmul(P, A, w_s, quantile = x -> x)
+# XA_prod_colred = colredmul(P, A, w_s, randn_quantile)
 # Prr = rowredmatrices(P,w_s)
 # pts = genpoints(Prr)
 # XA_prod_rowred = rowredmul(P, A, w_s, pts, randn_quantile)
@@ -256,7 +256,7 @@ begin
 
     axislegend(ax, merge = true)
 
-    save("Output/pricing_basket_option_$(variant_name).png", fig)
-    save("Output/pricing_basket_option_$(variant_name).svg", fig)
+    save("Output/pricing_basket_option_m23_$(variant_name).png", fig)
+    save("Output/pricing_basket_option_m23_$(variant_name).svg", fig)
     fig
 end
