@@ -10,12 +10,12 @@ include("utils.jl")
 
 mkpath("Output")
 
-case = 21
+case = 41
 b = 2
 s = 800
 step_size = 2
 m_range = 20
-fn_postfix = "v2_case$(case)_m$(m_range)_s$(s)_b$(b)"
+fn_postfix = "v3_case$(case)_m$(m_range)_s$(s)_b$(b)"
 
 BenchmarkTools.DEFAULT_PARAMETERS.seconds = 0.1
 #BenchmarkTools.DEFAULT_PARAMETERS.samples = 2
@@ -82,7 +82,7 @@ end
 
 CSV.write("Output/runtime_$(fn_postfix).csv", df)
 
-df = CSV.read("Output/runtime_$(fn_postfix).csv", DataFrame)
+df = CSV.read("Output/runtime_v2_case21_m20_s800_b2.csv", DataFrame)
 
 df_reg = DataFrame(reg_row_red = regres_comp(df.m,df.row_red), reg_col_red = regres_comp(df.m,df.col_red), reg_red = regres_comp(df.m,df.row_col_red), reg_std_mul = regres_comp(df.m, df.std_mat) )
 
@@ -120,12 +120,12 @@ begin
     fig = Figure(size = (500,350))
     ax = Axis(fig[1,1], title = "", xlabel = "m", ylabel = "Runtime in seconds (log scale)" , yscale = log10, yminorticksvisible = true, yminorgridvisible = true,
     yminorticks = IntervalsBetween(5))
-    #ylims!(ax,10^(-4),10^(1))
+    ylims!(ax,10^(-4),10^(2.5))
 
     plot_lines!(df.m,df.col_red,"column reduced",:circle, colors[1])
-    plot_lines!(df.m,df.std_mat,"standard",:rect, colors[4])
+    plot_lines!(df.m,df.std_mat,"standard",:rect, colors[2])
     plot_lines!(df.m,df.row_red,"row reduced", :xcross, colors[3])
-    #plot_lines!(df.m,df.row_col_red,"row and column reduced",:rtriangle, colors[4])
+    plot_lines!(df.m,df.row_col_red,"row and column reduced",:rtriangle, colors[4])
     
     # d_1,d_2 =  regres_theory(df.col_red, df.theo_col)
     # lines!(df.m, d_2.*df.theo_col,linestyle = :dash, label="Theoretical estimate \n column reduced",linewidth = 1.5, color = :black)
