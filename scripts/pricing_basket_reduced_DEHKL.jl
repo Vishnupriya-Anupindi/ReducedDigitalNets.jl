@@ -41,7 +41,7 @@ else
     R = 5 
 end
 
-m_ref = 16
+m_ref = 20
 m_test = 10:15
 
 ###########
@@ -109,30 +109,30 @@ end
 
 
 function pay_off(ES,K)
-    return max(0.0, mean(ES) - K)
+    return mean(@. max(0.0, ES - K))
 end
 
 # comute reference value, here if we use a matrix product, we quickly run out of memory, therefore a manual for loop 
 
-# ES_T_ref = zeros(s, Threads.nthreads())
+ES_T_ref = zeros(s, Threads.nthreads())
 
-# @showprogress Threads.@threads :static for k in 1:(R_ref * b^m_ref)
-#     tid = Threads.threadid()
+@showprogress Threads.@threads :static for k in 1:(R_ref * b^m_ref)
+    tid = Threads.threadid()
     
-#     xa_k = L * randn(s)  # notice that we do not transpose L here!
-#     for j in 1:s 
-#         ES_T_ref[j,tid] += 1/(R_ref * b^m_ref) * kernel(xa_k[j], sigma, T, S_init)
-#     end
-# end
-# ES_T_ref = sum(ES_T_ref, dims = 2)[:,1]
+    xa_k = L * randn(s)  # notice that we do not transpose L here!
+    for j in 1:s 
+        ES_T_ref[j,tid] += 1/(R_ref * b^m_ref) * kernel(xa_k[j], sigma, T, S_init)
+    end
+end
+ES_T_ref = sum(ES_T_ref, dims = 2)[:,1]
 
-ES_T_ref = fill(100.0, s)
+#ES_T_ref = fill(100.0, s)
 
 #R_ref = 1
 #X = randn(R_ref * b^m_ref, s)
 # XA_prod_ref = X * A
 # ES_T_ref = expected_value(XA_prod_ref, sigma, T, S_init)
-# HS_ref = pay_off(ES_T_ref, K)
+ HS_ref = pay_off(ES_T_ref, K)
 
 
 # compute for different values of c 
@@ -225,13 +225,16 @@ mean_ES_err = mean(ES_err, dims = 3)[:,:,1]
 
 HS_ref = pay_off(ES_T_ref, K)
 HS = pay_off.(ES, K)  # issue, all payoffs are zero
-HS_err = abs.(HS .- HS_ref)
+# HS_err = abs.(HS .- HS_ref)
+HS_mean = mean(HS, dims = 3)[:,:,1]
+HS_err = abs.(HS_mean .- HS_ref)
 # error_std_col = std(errs_col, dims = 3)[:,:,1]
 
 using CairoMakie
 
 
-err_quantitiy = mean_ES_err
+#err_quantitiy = mean_ES_err
+err_quantitiy = HS_err
 
 begin 
     fig = Figure()
