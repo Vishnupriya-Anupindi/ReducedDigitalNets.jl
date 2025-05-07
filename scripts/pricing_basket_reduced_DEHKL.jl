@@ -23,7 +23,7 @@ using ReducedDigitalNets, LinearAlgebra, Statistics, Distributions, DataFrames, 
 
 ###########
 # Parameters
-use_sobol = true
+use_sobol = false
 
 b = 2
 s = 10 
@@ -33,21 +33,22 @@ S_init = 100
 sigma = 0.4 
 rho = 0.2     
 
-R_ref = 5
+R_ref = 15
 
 if use_sobol
     R = 1
 else 
-    R = 5 
+    R = 15
 end
 
-m_ref = 20
+m_ref = 25
 m_test = 10:15
 
 ###########
 # Helper function to convert uniform to normal distribution:
 
 dx = Float64(b)^(-m_ref)
+# dx = Float64(b)^(-15)
 
 function make_quantile(dx)
     return x -> quantile(Normal(), dx/2 + x)
@@ -261,7 +262,7 @@ begin
 
     axislegend(ax, merge = true)
 
-    save("Output/pricing_basket_option_m23_$(variant_name)_2.png", fig)
-    save("Output/pricing_basket_option_m23_$(variant_name)_2.svg", fig)
+    save("Output/pricing_basket_m15_R15_random.png", fig)
+    save("Output/pricing_basket_m15_R15_random.svg", fig)
     fig
 end
