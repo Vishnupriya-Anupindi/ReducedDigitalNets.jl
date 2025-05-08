@@ -24,6 +24,7 @@ using ReducedDigitalNets, LinearAlgebra, Statistics, Distributions, DataFrames, 
 ###########
 # Parameters
 use_sobol = false
+#use_nied = false
 
 b = 2
 s = 10 
@@ -33,16 +34,27 @@ S_init = 100
 sigma = 0.4 
 rho = 0.2     
 
-R_ref = 15
+R_ref = 20
 
 if use_sobol
     R = 1
 else 
-    R = 15
+    R = 20
 end
 
+# if use_sobol
+#     R = 1
+#     mat_type = "sobol"
+# elseif use_nied
+#     R = 1
+#     mat_type = "nied"
+# else 
+#     R = 15
+#     mat_type = "random"
+# end
+
 m_ref = 25
-m_test = 10:15
+m_test = 10:22
 
 ###########
 # Helper function to convert uniform to normal distribution:
@@ -171,6 +183,14 @@ for (i_m, m) in enumerate(m_test)
                 C = [rand(0:1,m,m) for i in 1:s]        
             end
 
+            # if use_sobol
+            #     C = load_seq_mat("sobol_Cs.txt",b, m, s)
+            # elseif use_nied
+            #     C = load_seq_mat("niederreiter_Cs.txt",b, m, s)
+            # else
+            #     C = [rand(0:1,m,m) for i in 1:s]        
+            # end
+
             P = DigitalNetGenerator(b,m,s,C)            
             w_s = [min(floor(Int,log2(j^c)), m) for j in 1:s]
 
@@ -192,6 +212,15 @@ for (i_m, m) in enumerate(m_test)
             else
                 C = [rand(0:1,m,m) for i in 1:s]        
             end
+
+            # if use_sobol
+            #     C = load_seq_mat("sobol_Cs.txt",b,m,s)
+            # if use_nied
+            #     C = load_seq_mat("niederreiter_Cs.txt",b, m, s)
+            # else
+            #     C = [rand(0:1,m,m) for i in 1:s]        
+            # end
+
             P = DigitalNetGenerator(b,m,s,C)                
             w_s = [min(floor(Int,log2(j^c)), m) for j in 1:s]
 
@@ -247,22 +276,24 @@ begin
     scatter!(ax, m_test, err_quantitiy[:, 1], label = "c = $(c)")
 
     c = 0.5
-    lines!(ax, m_test, err_quantitiy[:, 2], linewidth = 2, label = "Reduced c_col = $(c)")
-    scatter!(ax, m_test, err_quantitiy[:, 2], label = "Reduced c_col = $(c)", marker = :rect)
+    lines!(ax, m_test, err_quantitiy[:, 2], linewidth = 2, label = "Column Reduced c = $(c)")
+    scatter!(ax, m_test, err_quantitiy[:, 2], label = "Column Reduced c = $(c)", marker = :rect)
     #row_red
-    lines!(ax, m_test, err_quantitiy[:, 4], linewidth = 2, label = "Reduced c_row = $(c)", linestyle = :dash)
-    scatter!(ax, m_test, err_quantitiy[:, 4], label = "Reduced c_row = $(c)", marker = :rect)
+    lines!(ax, m_test, err_quantitiy[:, 4], linewidth = 2, label = "Row Reduced c = $(c)", linestyle = :dash)
+    scatter!(ax, m_test, err_quantitiy[:, 4], label = "Row Reduced c = $(c)", marker = :rect)
 
     c = 1.0
-    lines!(ax, m_test, err_quantitiy[:, 3], linewidth = 2, label = "Reduced c_col = $(c)")
-    scatter!(ax, m_test, err_quantitiy[:, 3], label = "Reduced c_col = $(c)", marker = :utriangle)
+    lines!(ax, m_test, err_quantitiy[:, 3], linewidth = 2, label = "Column Reduced c = $(c)")
+    scatter!(ax, m_test, err_quantitiy[:, 3], label = "Column Reduced c = $(c)", marker = :utriangle)
     #row_red
-    lines!(ax, m_test, err_quantitiy[:, 5], linewidth = 2, label = "Reduced c_row = $(c)", linestyle = :dash)
-    scatter!(ax, m_test, err_quantitiy[:, 5], label = "Reduced c_row = $(c)", marker = :utriangle)
+    lines!(ax, m_test, err_quantitiy[:, 5], linewidth = 2, label = "Row Reduced c = $(c)", linestyle = :dash)
+    scatter!(ax, m_test, err_quantitiy[:, 5], label = "Row Reduced c = $(c)", marker = :utriangle)
 
     axislegend(ax, merge = true)
 
-    save("Output/pricing_basket_m15_R15_random.png", fig)
-    save("Output/pricing_basket_m15_R15_random.svg", fig)
+    # save("Output/pricing_basket_m22_$(mat_type).png", fig)
+    # save("Output/pricing_basket_m22_$(mat_type).svg", fig)
+    save("Output/pricing_basket_m22_R20_random.png", fig)
+    save("Output/pricing_basket_m22_R20_random.svg", fig)
     fig
 end
