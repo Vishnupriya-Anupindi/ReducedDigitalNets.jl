@@ -34,12 +34,12 @@ S_init = 100
 sigma = 0.4 
 rho = 0.2     
 
-R_ref = 20
+R_ref = 15
 
 if use_sobol
     R = 1
 else 
-    R = 20
+    R = 15
 end
 
 # if use_sobol
@@ -293,7 +293,7 @@ begin
 
     # save("Output/pricing_basket_m22_$(mat_type).png", fig)
     # save("Output/pricing_basket_m22_$(mat_type).svg", fig)
-    save("Output/pricing_basket_m22_R20_random.png", fig)
-    save("Output/pricing_basket_m22_R20_random.svg", fig)
+    save("Output/pricing_basket_m22_R15_random.png", fig)
+    save("Output/pricing_basket_m22_R15_random.svg", fig)
     fig
 end
