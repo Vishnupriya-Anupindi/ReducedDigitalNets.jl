@@ -171,28 +171,16 @@ end
 # norm(x,1) = |a| + |b| 
 
 
-variant = 1
-
-if variant == 1 
-    ES_err = [abs(mean(es) .- mean(ES_T_ref)) for es in ES]
-    variant_name = "abs_mean_diff"
-elseif variant == 2
-    ES_err = [1/s * norm(es .- ES_T_ref, 1) for es in ES]
-    variant_name = "1_norm"
-end 
-mean_ES_err = mean(ES_err, dims = 3)[:,:,1]
-
 HS_ref = pay_off(ES_T_ref, K)
-HS = pay_off.(ES, K)  # issue, all payoffs are zero
-# HS_err = abs.(HS .- HS_ref)
+
+HS = pay_off.(ES, K)
 HS_mean = mean(HS, dims = 3)[:,:,1]
+
 HS_err = abs.(HS_mean .- HS_ref)
-# error_std_col = std(errs_col, dims = 3)[:,:,1]
+
 
 using CairoMakie
 
-
-#err_quantitiy = mean_ES_err
 err_quantitiy = HS_err
 
 begin 
